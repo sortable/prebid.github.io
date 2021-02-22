@@ -129,7 +129,7 @@ Targeting.shared.domain = domain
 ```
 ### Store URL
 
-Retrieve and set the domain of your store URL with the following commands:
+Retrieve and set the domain of your store URL with the following command:
 
 ```
 Targeting.shared.storeURL
@@ -141,7 +141,7 @@ Targeting.shared.storeURL = "itunes store URL string"
 
 ### iTunesID
 
-Retrieve and set the domain of your store URL with the following commands:
+Retrieve and set the domain of your iTunes ID with the below command. This field will be transmitted to buyers as the bundle ID as recommended in OpenRTB 2.5. Failure to supply this value can have a negative monetary impact.
 
 ```
 Targeting.shared.itunesID
@@ -150,6 +150,77 @@ Targeting.shared.itunesID
 ```
 Targeting.shared.itunesID = itunesID
 ```
+
+### Open Measurment SDK (OMSDK)
+
+OMSDK is designed to facilitate 3rd party viewability and verification measurement for ads served in mobile app enviroments. Prebid SDK will provide the signaling component to Bid Adapters, by way of Prebid Server, indicating the impression is elligible for OMSDK support. Prebid SDK does not currently integrate with OMSDK itself, instead it will rely on a publisher ad server to render viewability and verification measurement code.
+
+There three components to signaling support for OMSDK:
+* Partner Name
+* Partner Version
+* API code
+
+**Partner Name**
+
+This will be the [IAB OMSDK compliant partner name](https://complianceomsdkapi.iabtechlab.com/compliance/latest) responsible for integrating with the OMSDK spec. See below for configuration and examples
+
+#### omidPartnerName
+Open Measurement partner name. 
+
+```
+Targeting.shared.omidPartnerName
+```
+
+Examples:
+
+Swift
+```swift
+Targeting.shared.omidPartnerName = "Google"
+```
+
+Objective C
+```objective_c
+Targeting.shared.omidPartnerName = @"Google";
+```
+
+
+**Partner Version**
+
+The OMSDK version number the partner integrated with. See below for configuration and examples.
+
+
+#### omidPartnerVersion
+Partner's OMSDK version number implementation
+```
+Targeting.shared.omidPartnerVersion
+```
+
+Examples:
+
+Swift
+```swift
+Targeting.shared.omidPartnerVersion = "1.0"
+```
+
+Objective C
+```objective_c
+Targeting.shared.omidPartnerVersion = @"1.0";
+```
+
+**API Code**
+
+Per OpenRTB 2.5, support for OMSDK is signaled using the imp.[media type].api field represented in Prebid SDK withing each ad format type under the parameters object. Refer to the documentation of the respective ad unit class.
+
+Example:
+```
+let bannerUnit = BannerAdUnit(configId: "6ace8c7d-88c0-4623-8117-75bc3f0a2e45", size: CGSize(width: 300, height: 250))
+let parameters = BannerAdUnit.Parameters()
+parameters.api = [Signals.Api(7)]
+adUnit.setParameters(parameters);
+```
+
+
+
 
 ## Inventory (Context) Keywords
 
@@ -379,6 +450,29 @@ guard let gdprConsentString = Targeting.shared.gdprConsentString else {
 Targeting.shared.gdprConsentString = "A String"
 ```
 
+### Purpose Consent
+
+```
+public var purposeConsents: String?
+```
+
+You can retrieve and set the purposeConsents for targeting:
+
+```
+//given
+
+Targeting.shared.purposeConsents = "100000000000000000000000"
+
+defer {
+
+  Targeting.shared.purposeConsents = nil
+
+}
+
+//when
+
+let deviceAccessConsent = Targeting.shared.getDeviceAccessConsent()
+```
 ### Subject to COPPA
 
 Prebid supports passing of the Child Online Privacy Prection (COPPA) signal to Prebid Server (PBS) for all COPPA traffic. When PBS receives the COPPA flag we strip out all personal data from the requeset. For a general overview of COPPA, see the [FTC's guidlines](https://www.ftc.gov/enforcement/rules/rulemaking-regulatory-reform-proceedings/childrens-online-privacy-protection-rule).
@@ -401,5 +495,5 @@ Targeting.shared.subjectToCOPPA = true;
 
 ## Further Reading
 
-- [Prebid Mobile API - iOS]({{site.baseurl}}/prebid-mobile/pbm-api/ios/pbm-api-ios.html)
+- [Prebid Mobile API - iOS](/prebid-mobile/pbm-api/ios/pbm-api-ios.html)
 - [Prebid Mobile API - Android]({{site.baseurl}}/prebid-mobile/pbm-api/android/pbm-api-android.html)
